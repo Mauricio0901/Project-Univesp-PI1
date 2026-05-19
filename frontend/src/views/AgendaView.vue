@@ -53,12 +53,63 @@ export default {
           center: 'prev,title,next',
           right: 'today,dayGridMonth,dayGridWeek,listDay'
         },
-        buttonText: {
+
+       
+       
+  buttonText: {
           today: "Hoje",
           month: "Mês",
           week: "Semana",
           list: 'Dia'
         },
+
+        calendarOptions: {
+  headerToolbar: {
+    left: '',
+    center: 'prev,title,next',
+    right: 'today,dayGridMonth,dayGridWeek,listDay'
+  },
+       
+        // Aqui vem o hook que executa depois que a view é carregada
+  viewDidMount() {
+    const buttons = document.querySelectorAll('.fc-button');
+
+    buttons.forEach(btn => {
+      const text = btn.textContent.trim().toLowerCase();
+
+      switch (text) {
+        case 'hoje':
+          btn.setAttribute('aria-label', 'Ir para a data atual');
+          break;
+        case 'mês':
+          btn.setAttribute('aria-label', 'Visualizar agendamentos por mês');
+          break;
+        case 'semana':
+          btn.setAttribute('aria-label', 'Visualizar agendamentos por semana');
+          break;
+        case 'dia':
+          btn.setAttribute('aria-label', 'Visualizar agendamentos por dia');
+          break;
+        case 'anterior':
+        case 'prev':
+          btn.setAttribute('aria-label', 'Ir para o período anterior');
+          break;
+        case 'próximo':
+        case 'next':
+          btn.setAttribute('aria-label', 'Ir para o próximo período');
+          break;
+      }
+
+      btn.setAttribute('role', 'button');
+    });
+  },
+
+  // Outros eventos que você já tem
+  events: [],
+  eventClick: this.getAgendamentosDetalhes,
+  eventMouseEnter: this.mouseHover,
+  eventMouseLeave: this.mouseLeave,
+},
         events: [],
         eventClick: this.getAgendamentosDetalhes,
         eventMouseEnter: this.mouseHover,
@@ -204,7 +255,23 @@ export default {
           cancelButtonColor: "#d33",
           confirmButtonText: "Sim",
           cancelButtonText: "Não",
-        });
+          // Acessibilidade
+  didOpen: () => {
+    const confirmBtn = Swal.getConfirmButton();
+    const cancelBtn = Swal.getCancelButton();
+
+    // Define papéis e descrições
+    confirmBtn.setAttribute("aria-label", "Confirmar exclusão do agendamento");
+    confirmBtn.setAttribute("role", "button");
+
+    cancelBtn.setAttribute("aria-label", "Cancelar exclusão do agendamento");
+    cancelBtn.setAttribute("role", "button");
+
+    // Também pode garantir foco inicial para leitores de tela
+    confirmBtn.focus();
+  }
+});
+        
 
         if (result.isConfirmed) {
           this.loading = true

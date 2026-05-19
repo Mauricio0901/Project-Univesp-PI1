@@ -6,7 +6,7 @@
                 <div class="forms-wrap">
                     <form @submit.prevent="login()" autocomplete="off" class="sign-in-form">
                         <div class="logo">
-                            <img src="../assets/img/PetPlann3.png" alt="easyclass">
+                            <img src="../assets/img/PetPlann3.png" alt="Logo PetPlann">
                             
                         </div>
 
@@ -15,20 +15,49 @@
 
                         </div>
 
-                        <div class="actual-form">
-                            <div class="input-wrap"> <!--Login-->
-                                <input v-model="email" type="email" minlength="4" class="input-field" autocomplete="off"
-                                    required />
-                                <label>Email</label>
-                            </div>
+                  <div class="actual-form">
+  <!-- Campo de e-mail -->
+  <div class="input-wrap">
+    <label for="emailInput" class="visually-hidden">Email</label>
 
-                            <div class="input-wrap">
-                                <input v-model="senha" type="password" minlength="6" class="input-field" autocomplete="off"
-                                    required />
-                                <label>Senha</label>
-                            </div>
+    <input
+        id="emailInput"
+        v-model="email"
+        type="email"
+        class="input-field"
+        placeholder="Email"
+        required
+    />
+</div>
 
-                            <button type="submit" class="sign-btn"> Entrar</button>
+  <!-- Campo de senha -->
+  <div class="input-wrap">
+    <label for="passwordInput" class="visually-hidden">Senha</label>
+
+    <input
+        id="passwordInput"
+        v-model="senha"
+        type="password"
+        class="input-field"
+        placeholder="Senha"
+        required
+    />
+</div>
+
+
+<p id="loginHelp" class="visually-hidden">
+  Pressione Enter para acessar sua conta no PetPlann.
+</p>
+
+<button 
+  type="submit" 
+  class="sign-btn" 
+  aria-label="Entrar no sistema PetPlann"
+  aria-describedby="loginHelp"
+>
+  Entrar
+</button>
+
 
                         </div>
                     </form>
@@ -71,9 +100,9 @@
                 <!-- Carousel -->
                 <div class="carousel">
                     <div class="images-wrapper">
-                        <img src="../assets/img/carousel_1.png" class="image img-1 show" id="img1" alt="" />
-                        <img src="../assets/img/carousel_2.png" class="image img-2" id="img2" alt="" />
-                        <img src="../assets/img/carousel_3.png" class="image img-3" id="img3" alt="" />
+                        <img src="../assets/img/carousel_1.png" class="image img-1 show" id="img1" alt="Gato e Cachorro" />
+                        <img src="../assets/img/carousel_2.png" class="image img-2" id="img2" alt="Comida para Pet" />
+                        <img src="../assets/img/carousel_3.png" class="image img-3" id="img3" alt="Cachorro tomando banho" />
                     </div>
                     <div class="text-slider">
                         <div class="text-wrap">
@@ -297,24 +326,44 @@ form.sign-up-form {
     transition: 1s;
 }
 
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .input-wrap {
     position: relative;
-    height: 37px;
     margin-bottom: 2rem;
 }
 
 .input-field {
-    position: absolute;
     width: 100%;
-    height: 100%;
+    padding: 12px 0;
     background: none;
     border: none;
     outline: none;
-    border-bottom: 1px solid #fdfafa;
-    padding: 0;
-    font-size: 0.95rem;
-    color: #ffffff;
-    transition: 0.4s;
+    border-bottom: 1px solid #fff;
+    font-size: 1rem;
+    color: #fff;
+}
+
+
+.input-field {
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #fff;
+    font-size: 1rem;
+    color: #fff;
 }
 
 label {

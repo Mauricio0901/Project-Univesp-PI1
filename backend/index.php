@@ -1,5 +1,10 @@
 <?php 
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+use Slim\Factory\AppFactory;
+
 use Slim\Factory\AppFactory;
 use Slim\Middleware\BodyParsingMiddleware;
 use Slim\Middleware\CorsMiddleware;
@@ -18,23 +23,31 @@ use Psr\Http\Message\RequestInterface as Request;
 
 require "vendor/autoload.php";
 
-header('Access-Control-Allow-Origin: *');
-
-header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT');
-
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-
-
 $app = AppFactory::create();
+
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', 'https://endearing-jelly-f6ed43.netlify.app') // ou substitua pelo domínio do Netlify
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 
 $app->addBodyParsingMiddleware();
 
 $app->AddErrorMiddleware(true,true,true);
 
-$app->post('/', AuthController::class . ':login');
+$app->get('/', function ($request, $response) {
+    $response->getBody()->write("API PetPlann está funcionando!");
+    return $response;
+});
+
+$app->post('/login', AuthController::class . ':login');
 $app->post('/register', AuthController::class . ':inserirUser');
 $app->post('/senhaAcesso', AuthController::class . ':verificaSenha');
 
+$app->get('/login', AuthController::class . ':login');
 $app->get('/animais', AnimalController::class . ':getAnimais');    
 $app->get('/animal/{id}', AnimalController::class . ':getAnimal');                            
 $app->post('/inserirAnimal', AnimalController::class . ':insertAnimal');
@@ -118,5 +131,30 @@ $app->delete('/deletarServico/{id}', ServicosController::class . ':deletarServic
 $app->post('/venda', VendasController::class . ':cadastrarVenda');
 $app->get('/historico-vendas', VendasController::class . ':getHistoricoVendas');
 
+header("Access-Control-Allow-Origin: https://petplann.infinityfreeapp.com");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+
+
+$app->add(function ($request, $handler) {
+    // Se for uma requisição OPTIONS (pré-flight), devolve resposta sem processar as rotas
+    if ($request->getMethod() === 'OPTIONS') {
+        $response = new \Slim\Psr7\Response();
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', 'https://endearing-jelly-f6ed43.netlify.app/')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
+    }
+
+    // Requisições normais seguem fluxo
+    $response = $handler->handle($request);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', 'https://endearing-jelly-f6ed43.netlify.app/')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+        ->withHeader('Access-Control-Allow-Credentials', 'true');
+});
 
 $app->run();
